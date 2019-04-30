@@ -4,77 +4,29 @@
     ViewData["Title"] = "OnDemandTree";
 }
 
-@* Here We will add some css for looks treeview good *@
 
-<style>
-    .loadingP {
-        background-image: url('../Images/generated-image.gif');
-        width: 15px;
-        display: inline-block;
-    }
-
-    .collapse {
-        width: 15px;
-        background-image:  url('../Images/ui-icons_454545_256x240.png');
-        background-repeat: no-repeat;
-        background-position: -36px -17px;
-        display: inline-block;
-        cursor: pointer;
-    }
-
-    .expand {
-        width: 15px;
-        background-image: url('../Images/ui-icons_454545_256x240.png');
-        background-repeat: no-repeat;
-        background-position: -50px -17px;
-        display: inline-block;
-        cursor: pointer;
-    }
-
-    .treeview ul {
-        font: 14px Arial, Sans-Serif;
-        margin: 0px;
-        padding-left: 20px;
-        list-style: none;
-    }
-
-    .treeview > li > a {
-        font-weight: bold;
-    }
-
-    .treeview li a {
-        padding: 4px;
-        font-size: 12px;
-        display: inline-block;
-        text-decoration: none;
-        width: auto;
-    }
-</style>
+<link href="~/css/treeStyle.css" rel="stylesheet" />
 
 <div style="border:1px solid black; padding:0px;  background-color:#FAFAFA">
     @{
-    <div class="treeview">
-        @{
-            if (Model != null && Model.Count() > 0)
-            {
-                @*Here I will going to load Treeview menus*@
-                <ul>
-                    @foreach (var i in Model)
-                    {
-                        <li>
-                            <span class="collapse collapsible" data-loaded="false" pid="@i.ID">&nbsp;</span>
-                            @* Here I have added the above span for collapsible button for treeview *@
-                            @* and data-loaded="false" means its sub menu not loaded yet from database *@
-                            <span>
-                                @i.AccountName
-                            </span>
-                        </li>
-                    }
-                </ul>
+        <div class="treeview">
+            @{
+                if (Model != null && Model.Count() > 0)
+                {
+                    <ul>
+                        @foreach (var i in Model)
+                        {
+                            <li>
+                                <span class="collapseTree collapsible" data-loaded="false" pid="@i.ID">&nbsp;</span>
+                                <span>
+                                    @i.AccountName
+                                </span>
+                            </li>
+                        }
+                    </ul>
+                }
             }
-        }
-
-    </div>
+        </div>
     }
 </div>
 @section scripts
