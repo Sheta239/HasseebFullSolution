@@ -26,12 +26,12 @@
 
                         var $ul = $("<ul></ul>");
                         $.each(d, function (i, ele) {
-                            console.log(d);
+                            console.log(ele);
 
                             $ul.append(
                                 $("<li></li>").append(
-                                    "<span class='collapseTree collapsible' data-loaded='false' pid='" + ele.ID + "'>&nbsp;</span>" +
-                                    "<span>" + ele.AccountName +"</span>"
+                                    "<span class='collapseTree collapsible' data-loaded='false' pid='" + ele.id + "'>&nbsp;</span>" +
+                                    "<span>" + ele.accountName +"</span>"
                                 )
                             )
                         });
