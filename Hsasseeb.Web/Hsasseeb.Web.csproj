@@ -12,6 +12,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\Images\accent.png" />
+    <None Include="wwwroot\Images\bullet.png" />
+    <None Include="wwwroot\Images\generated-image.gif" />
+    <None Include="wwwroot\Images\heroAccent.png" />
+    <None Include="wwwroot\Images\orderedList0.png" />
+    <None Include="wwwroot\Images\orderedList1.png" />
+    <None Include="wwwroot\Images\orderedList2.png" />
+    <None Include="wwwroot\Images\orderedList3.png" />
+    <None Include="wwwroot\Images\orderedList4.png" />
+    <None Include="wwwroot\Images\orderedList5.png" />
+    <None Include="wwwroot\Images\orderedList6.png" />
+    <None Include="wwwroot\Images\orderedList7.png" />
+    <None Include="wwwroot\Images\orderedList8.png" />
+    <None Include="wwwroot\Images\orderedList9.png" />
+    <None Include="wwwroot\Images\ui-icons_454545_256x240.png" />
     <None Include="wwwroot\lib\jstree\dist\jstree.js" />
     <None Include="wwwroot\lib\jstree\dist\jstree.min.js" />
   </ItemGroup>
