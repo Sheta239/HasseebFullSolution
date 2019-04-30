@@ -11,6 +11,11 @@
     <Compile Remove="Data\Migrations\20190427155253_newAccount.Designer.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\lib\jstree\dist\jstree.js" />
+    <None Include="wwwroot\lib\jstree\dist\jstree.min.js" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />

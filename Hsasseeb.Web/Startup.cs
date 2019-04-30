@@ -45,6 +45,8 @@ namespace Hsasseeb.Web
 
             services.AddScoped(serviceType: typeof(IAccountManager), implementationType: typeof(AccountManager));
             services.AddScoped(serviceType: typeof(IRepository<Account>), implementationType: typeof(Repository<Account>));
+            services.AddScoped(serviceType: typeof(IAccountNatureManager), implementationType: typeof(AccountNatureManager));
+            services.AddScoped(serviceType: typeof(IRepository<AccountNature>), implementationType: typeof(Repository<AccountNature>));
 
 
 

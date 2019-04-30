@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Hasseeb.Application.Domain;
 using Hsasseeb.Web.Data;
 using Hasseeb.Application.Service;
+using Hsasseeb.Web.Models;
+using Newtonsoft.Json;
 
 namespace Hsasseeb.Web.Controllers
 {
@@ -15,14 +17,142 @@ namespace Hsasseeb.Web.Controllers
     {
       
             private readonly IAccountManager _accountAppService;
+            private readonly IAccountNatureManager _accNatureAppService;
 
 
-            public AccountsController(IAccountManager accountAppService)
+            public AccountsController(IAccountManager accountAppService, IAccountNatureManager accNatureAppService)
             {
                 _accountAppService = accountAppService;
+                _accNatureAppService = accNatureAppService;
             }
 
-        
+
+        public ActionResult OnDemandTree()
+        {
+            var geatAll = _accountAppService.GetAll();
+
+            List<Account> Parent = new List<Account>();
+            foreach (var item in geatAll)
+            {
+                Account viewPar = new Account();
+                if (item.ParentAccountID == null || item.ParentAccountID ==0)
+                {
+                    viewPar.AccountDesc = item.AccountDesc;
+                    viewPar.ID = item.ID;
+                    viewPar.AccountName = item.AccountName;
+                    viewPar.AccountNatureID = item.AccountNatureID;
+                    viewPar.AccountSerial = item.AccountSerial;
+                    viewPar.Active = item.Active;
+                    viewPar.AddDate = item.AddDate;
+                    viewPar.GroupOrder = item.GroupOrder;
+                    viewPar.IsMain = item.IsMain;
+                    viewPar.ParentAccountID = item.ParentAccountID;
+                    Parent.Add(viewPar);
+
+                }
+              
+            }
+            return View(Parent);
+        }
+
+
+        public JsonResult GetSubMenu(string pid)
+        {
+            System.Threading.Thread.Sleep(5000);
+            var geatAll = _accountAppService.GetAll();
+            List<Account> Child = new List<Account>();
+            int pID = 0;
+            int.TryParse(pid, out pID);
+            
+            foreach (var item in geatAll)
+            {
+                Account viewPar = new Account();
+                if (item.ParentAccountID == pID)
+                {
+                    viewPar.AccountDesc = item.AccountDesc;
+                    viewPar.ID = item.ID;
+                    viewPar.AccountName = item.AccountName;
+                    viewPar.AccountNatureID = item.AccountNatureID;
+                    viewPar.AccountSerial = item.AccountSerial;
+                    viewPar.Active = item.Active;
+                    viewPar.AddDate = item.AddDate;
+                    viewPar.GroupOrder = item.GroupOrder;
+                    viewPar.IsMain = item.IsMain;
+                    viewPar.ParentAccountID = item.ParentAccountID;
+                    Child.Add(viewPar);
+                }
+            }
+
+            return Json(Child);
+                ////return new JsonResult { Data = Child, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        #region region
+        public ActionResult Tree()
+        {
+            List<TreeViewModel> nodes = new List<TreeViewModel>();
+            var geatAll = _accountAppService.GetAll();
+
+            List<Account> Parent = new List<Account>();
+            List<Account> Child = new List<Account>();
+            foreach (var item in geatAll)
+            {
+                Account viewPar = new Account();
+                if (item.ParentAccountID == null)
+                {
+                    viewPar.AccountDesc = item.AccountDesc;
+                    viewPar.ID = item.ID;
+                    viewPar.AccountName = item.AccountName;
+                    viewPar.AccountNatureID = item.AccountNatureID;
+                    viewPar.AccountSerial = item.AccountSerial;
+                    viewPar.Active = item.Active;
+                    viewPar.AddDate = item.AddDate;
+                    viewPar.GroupOrder = item.GroupOrder;
+                    viewPar.IsMain = item.IsMain;
+                    viewPar.ParentAccountID = item.ParentAccountID;
+                    Parent.Add(viewPar);
+
+                }
+                else
+                {
+                    viewPar.AccountDesc = item.AccountDesc;
+                    viewPar.ID = item.ID;
+                    viewPar.AccountName = item.AccountName;
+                    viewPar.AccountNatureID = item.AccountNatureID;
+                    viewPar.AccountSerial = item.AccountSerial;
+                    viewPar.Active = item.Active;
+                    viewPar.AddDate = item.AddDate;
+                    viewPar.GroupOrder = item.GroupOrder;
+                    viewPar.IsMain = item.IsMain;
+                    viewPar.ParentAccountID = item.ParentAccountID;
+                    Child.Add(viewPar);
+                }
+            }
+
+           
+
+
+            foreach (var item in Parent)
+            {
+                nodes.Add(new TreeViewModel { id = item.ID.ToString(), parent = "#", text = item.AccountName });
+            }
+
+            foreach (var item in Child)
+            {
+                nodes.Add(new TreeViewModel { id = item.ParentAccountID.ToString() + "-" + item.ID.ToString(), parent = item.ParentAccountID.ToString(), text = item.AccountName });
+            }
+
+            ViewBag.Json = JsonConvert.SerializeObject(nodes);
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Tree(string selectedItems)
+        {
+            List<TreeViewModel> Items = JsonConvert.DeserializeObject<List<TreeViewModel>>(selectedItems);
+            return RedirectToAction("Tree");
+        }
 
         // GET: Accounts
         public  IActionResult Index()
@@ -32,134 +162,106 @@ namespace Hsasseeb.Web.Controllers
         }
 
         //// GET: Accounts/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        public IActionResult Details(int id)
+        {
+            
 
-        //    var account = await _context.Accounts
-        //        .Include(a => a.AccountNature)
-        //        .FirstOrDefaultAsync(m => m.ID == id);
-        //    if (account == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var account = _accountAppService.GetID(id);
+            if (account == null)
+            {
+                return NotFound();
+            }
 
-        //    return View(account);
-        //}
+            return View(account);
+        }
 
         //// GET: Accounts/Create
-        //public IActionResult Create()
-        //{
-        //    ViewData["AccountNatureID"] = new SelectList(_context.AccountNatures, "ID", "ID");
-        //    return View();
-        //}
+        public IActionResult Create()
+        {
+            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll().ToList(), "ID", "AccountNatureName");
+            return View();
+        }
 
         //// POST: Accounts/Create
         //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("AccountNatureID,ParentAccountID,AccountSerial,AccountName,AccountDesc,GroupOrder,Active,AddDate,IsMain,ID")] Account account)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(account);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["AccountNatureID"] = new SelectList(_context.AccountNatures, "ID", "ID", account.AccountNatureID);
-        //    return View(account);
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create([Bind("AccountNatureID,ParentAccountID,AccountSerial,AccountName,AccountDesc,GroupOrder,Active,AddDate,IsMain,ID")] Account account)
+        {
+            if (ModelState.IsValid)
+            {
+                _accountAppService.Insert(account);
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll().ToList(), "ID", "AccountNatureName", account.AccountNatureID);
+            return View(account);
+        }
 
         //// GET: Accounts/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        public IActionResult Edit(int id)
+        {
+            
 
-        //    var account = await _context.Accounts.FindAsync(id);
-        //    if (account == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["AccountNatureID"] = new SelectList(_context.AccountNatures, "ID", "ID", account.AccountNatureID);
-        //    return View(account);
-        //}
+            var account = _accountAppService.GetID(id);
+            if (account == null)
+            {
+                return NotFound();
+            }
+            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll().ToList(), "ID", "AccountNatureName", account.AccountNatureID);
+            return View(account);
+        }
 
         //// POST: Accounts/Edit/5
         //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("AccountNatureID,ParentAccountID,AccountSerial,AccountName,AccountDesc,GroupOrder,Active,AddDate,IsMain,ID")] Account account)
-        //{
-        //    if (id != account.ID)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, [Bind("AccountNatureID,ParentAccountID,AccountSerial,AccountName,AccountDesc,GroupOrder,Active,AddDate,IsMain,ID")] Account account)
+        {
+            if (id != account.ID)
+            {
+                return NotFound();
+            }
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(account);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!AccountExists(account.ID))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["AccountNatureID"] = new SelectList(_context.AccountNatures, "ID", "ID", account.AccountNatureID);
-        //    return View(account);
-        //}
+            if (ModelState.IsValid)
+            {
+               
+                    _accountAppService.Update(account);
+                
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll(), "ID", "AccountNatureName", account.AccountNatureID);
+            return View(account);
+        }
 
         //// GET: Accounts/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        public IActionResult Delete(int id)
+        {
+           
 
-        //    var account = await _context.Accounts
-        //        .Include(a => a.AccountNature)
-        //        .FirstOrDefaultAsync(m => m.ID == id);
-        //    if (account == null)
-        //    {
-        //        return NotFound();
-        //    }
+        var account = _accountAppService.GetID(id);
+            if (account == null)
+            {
+                return NotFound();
+            }
 
-        //    return View(account);
-        //}
+            return View(account);
+        }
 
         //// POST: Accounts/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var account = await _context.Accounts.FindAsync(id);
-        //    _context.Accounts.Remove(account);
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            _accountAppService.Delete(id);
+            return RedirectToAction(nameof(Index));
+        }
 
         //private bool AccountExists(int id)
         //{
         //    return _context.Accounts.Any(e => e.ID == id);
         //}
+        #endregion
     }
 }
