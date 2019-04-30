@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    $(document).on("click", ".collapsible", function () {
+    $(document).on("click", ".collapsible", function (e) {
    // $(".collapsible").live("click", function (e) {
         e.preventDefault();
 
