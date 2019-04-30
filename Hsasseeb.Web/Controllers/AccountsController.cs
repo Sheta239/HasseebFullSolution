@@ -88,71 +88,7 @@ namespace Hsasseeb.Web.Controllers
         }
 
         #region region
-        public ActionResult Tree()
-        {
-            List<TreeViewModel> nodes = new List<TreeViewModel>();
-            var geatAll = _accountAppService.GetAll();
-
-            List<Account> Parent = new List<Account>();
-            List<Account> Child = new List<Account>();
-            foreach (var item in geatAll)
-            {
-                Account viewPar = new Account();
-                if (item.ParentAccountID == null)
-                {
-                    viewPar.AccountDesc = item.AccountDesc;
-                    viewPar.ID = item.ID;
-                    viewPar.AccountName = item.AccountName;
-                    viewPar.AccountNatureID = item.AccountNatureID;
-                    viewPar.AccountSerial = item.AccountSerial;
-                    viewPar.Active = item.Active;
-                    viewPar.AddDate = item.AddDate;
-                    viewPar.GroupOrder = item.GroupOrder;
-                    viewPar.IsMain = item.IsMain;
-                    viewPar.ParentAccountID = item.ParentAccountID;
-                    Parent.Add(viewPar);
-
-                }
-                else
-                {
-                    viewPar.AccountDesc = item.AccountDesc;
-                    viewPar.ID = item.ID;
-                    viewPar.AccountName = item.AccountName;
-                    viewPar.AccountNatureID = item.AccountNatureID;
-                    viewPar.AccountSerial = item.AccountSerial;
-                    viewPar.Active = item.Active;
-                    viewPar.AddDate = item.AddDate;
-                    viewPar.GroupOrder = item.GroupOrder;
-                    viewPar.IsMain = item.IsMain;
-                    viewPar.ParentAccountID = item.ParentAccountID;
-                    Child.Add(viewPar);
-                }
-            }
-
-           
-
-
-            foreach (var item in Parent)
-            {
-                nodes.Add(new TreeViewModel { id = item.ID.ToString(), parent = "#", text = item.AccountName });
-            }
-
-            foreach (var item in Child)
-            {
-                nodes.Add(new TreeViewModel { id = item.ParentAccountID.ToString() + "-" + item.ID.ToString(), parent = item.ParentAccountID.ToString(), text = item.AccountName });
-            }
-
-            ViewBag.Json = JsonConvert.SerializeObject(nodes);
-
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Tree(string selectedItems)
-        {
-            List<TreeViewModel> Items = JsonConvert.DeserializeObject<List<TreeViewModel>>(selectedItems);
-            return RedirectToAction("Tree");
-        }
+       
 
         // GET: Accounts
         public  IActionResult Index()

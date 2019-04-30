@@ -16,12 +16,15 @@
                     <ul>
                         @foreach (var i in Model)
                         {
-                            <li>
-                                <span class="collapseTree collapsible" data-loaded="false" pid="@i.ID">&nbsp;</span>
-                                <span>
-                                    @i.AccountName
-                                </span>
-                            </li>
+                        <li>
+                            <span class="collapseTree collapsible" data-loaded="false" pid="@i.ID">&nbsp;</span>
+                            <span>
+                                @i.AccountName
+                            </span>
+                            <a asp-action="Edit" asp-route-id="@i.ID">Edit</a> |
+                            <a asp-action="Delete" asp-route-id="@i.ID">Delete</a>
+
+                        </li>
                         }
                     </ul>
                 }
