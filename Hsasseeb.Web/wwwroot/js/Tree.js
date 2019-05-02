@@ -26,12 +26,12 @@
 
                         var $ul = $("<ul></ul>");
                         $.each(d, function (i, ele) {
-                            console.log(ele);
+                            console.log(d);
 
                             $ul.append(
                                 $("<li></li>").append(
                                     "<span class='collapseTree collapsible' data-loaded='false' pid='" + ele.id + "'>&nbsp;</span>" +
-                                    "<span>" + ele.accountName +"</span>"
+                                    "<span>" + ele.accountName + "</span>"
                                 )
                             )
                         });
@@ -52,6 +52,8 @@
                     alert("Error!");
                 }
             });
+
+            function Edit(ID) { window.location.href = "/Accounts/Edit?ID"+ID ; };
         }
         else {
             // if already data loaded

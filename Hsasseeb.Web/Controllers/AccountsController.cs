@@ -26,6 +26,72 @@ namespace Hsasseeb.Web.Controllers
                 _accNatureAppService = accNatureAppService;
             }
 
+        #region SPA Accounts 
+
+        public ActionResult Accounts()
+        {
+            return View();
+        }
+        public JsonResult GetAccounts()
+        {
+            var data = _accountAppService.GetAll();
+            return Json(data);
+        }
+
+        [HttpGet]
+        public ActionResult Save(int ID)
+        {
+            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll().ToList(), "ID", "AccountNatureName");
+            ViewData["AccountParentID"] = new SelectList(_accountAppService.GetAll().ToList(), "ID", "AccountName");
+
+            return View();
+        }
+        [HttpPost]
+        public  ActionResult Save(Account account)
+        {
+            var newAccount = _accountAppService.GetID(account.ID);
+            if (ModelState.IsValid)
+            {
+
+            if (newAccount != null)
+            {
+                    _accountAppService.Update(account);
+
+                }
+                else
+                {
+                    _accountAppService.Insert(account);
+                }
+
+            }
+            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll().ToList(), "ID", "AccountNatureName", account.AccountNatureID);
+            ViewData["AccountParentID"] = new SelectList(_accountAppService.GetAll().ToList(), "ID", "AccountName",account.ParentAccountID);
+
+            return View(account);
+        }
+        [HttpGet]
+        public ActionResult SPADelete(int ID)
+        {
+
+            var account = _accountAppService.GetID(ID);
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            return View(account);
+        }
+        [HttpPost]
+        [ActionName("SPADelete")]
+        public ActionResult DeleteAccount(int ID)
+        {
+            bool status = false;
+
+            _accountAppService.Delete(ID);
+            return  Json ( new { status = status } );
+
+        }
+        #endregion
 
         public ActionResult OnDemandTree()
         {
