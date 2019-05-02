@@ -1,4 +1,9 @@
 ﻿
+@{
+    ViewData["Title"] = "Accounts";
+}
+
+
 <link href="~/css/jquery-ui.css" rel="stylesheet" />
 <link href="~/DataTables-1.10.18/css/dataTables.bootstrap4.css" rel="stylesheet" />
 <link href="~/DataTables-1.10.18/datatables.css" rel="stylesheet" />
@@ -98,6 +103,14 @@
             }
         })
     </script>
-    <script src="~/DataTables-1.10.18/datatables.js"></script>
-    <script src="~/lib/jquery/dist/jquery-ui-1.8.20.js"></script>
+
 </body>
+@section scripts
+    {
+    <environment names="Development">
+        <script src="~/DataTables-1.10.18/datatables.js" asp-append-version="true"></script>
+    </environment><environment names="Development">
+    <script src="~/lib/jquery/dist/jquery-ui-1.8.20.js" asp-append-version="true"></script>
+        </environment>
+ 
+}
