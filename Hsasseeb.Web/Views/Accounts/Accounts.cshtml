@@ -12,105 +12,35 @@
         color: red;
     }
 </style>
-<body>
-    <div style="width:90%; margin:0 auto" class="tablecontainer">
-        <a class="popup btn btn-primary" href="/home/save/0" style="margin-bottom:20px; margin-top:20px;">Add New Account</a>
-        <table id="myDatatable">
-            <thead>
-                <tr>
-                    <th>Account Name</th>
-                    <th>Account Desc</th>
-                    <th>Group Order</th>
-                    <th>Account Serial</th>
 
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
+<div style="width:90%; margin:0 auto" class="tablecontainer">
+    <a class="popup btn btn-primary" href="/home/save/0" style="margin-bottom:20px; margin-top:20px;">Add New Account</a>
+    <table id="myDatatable">
+        <thead>
+            <tr>
+                <th>Account Name</th>
+                <th>Account Desc</th>
+                <th>Group Order</th>
+                <th>Account Serial</th>
 
-    <script>
-        $(document).ready(function () {
-            var oTable = $('#myDatatable').DataTable({
-                "ajax": {
-                    "url": '/Accounts/GetAccounts',
-                    "type": "get",
-                    "datatype": "json"
-                },
-                "columns": [
-                    { "data": "AccountName", "autoWidth": true },
-                    { "data": "AccountDesc", "autoWidth": true },
-                    { "data": "GroupOrder", "autoWidth": true },
-                    { "data": "AccountSerial", "autoWidth": true },
-                    {
-                        "data": "ID", "width": "50px", "render": function (data) {
-                            return '<a class="popup" href="/Accounts/Save/' + data + '">Edit</a>';
-                        }
-                    },
-                    {
-                        "data": "ID", "width": "50px", "render": function (data) {
-                            return '<a class="popup" href="/Accounts/SPADelete/' + data + '">Delete</a>';
-                        }
-                    }
-                ]
-            })
-            $('.tablecontainer').on('click', 'a.popup', function (e) {
-                e.preventDefault();
-                OpenPopup($(this).attr('href'));
-            })
-            function OpenPopup(pageUrl) {
-                var $pageContent = $('<div/>');
-                $pageContent.load(pageUrl, function () {
-                    $('#popupForm', $pageContent).removeData('validator');
-                    $('#popupForm', $pageContent).removeData('unobtrusiveValidation');
-                    $.validator.unobtrusive.parse('form');
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+    </table>
+</div>
 
-                });
 
-                $dialog = $('<div class="popupWindow" style="overflow:auto"></div>')
-                    .html($pageContent)
-                    .dialog({
-                        draggable: false,
-                        autoOpen: false,
-                        resizable: false,
-                        model: true,
-                        title: 'Popup Dialog',
-                        height: 550,
-                        width: 600,
-                        close: function () {
-                            $dialog.dialog('destroy').remove();
-                        }
-                    })
-
-                $('.popupWindow').on('submit', '#popupForm', function (e) {
-                    var url = $('#popupForm')[0].action;
-                    $.ajax({
-                        type: "POST",
-                        url: url,
-                        data: $('#popupForm').serialize(),
-                        success: function (data) {
-                            if (data.status) {
-                                $dialog.dialog('close');
-                                oTable.ajax.reload();
-                            }
-                        }
-                    })
-
-                    e.preventDefault();
-                })
-                $dialog.dialog('open');
-            }
-        })
-    </script>
-
-</body>
 @section scripts
     {
     <environment names="Development">
-        <script src="~/DataTables-1.10.18/datatables.js" asp-append-version="true"></script>
-    </environment><environment names="Development">
-    <script src="~/lib/jquery/dist/jquery-ui-1.8.20.js" asp-append-version="true"></script>
-        </environment>
- 
+        <script src="~/DataTables-1.10.18/js/datatables.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery-ui-1.8.20.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Development">
+        <script src="~/js/accounts.js" asp-append-version="true"></script>
+    </environment>
+
 }
