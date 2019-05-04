@@ -46,8 +46,13 @@ namespace Hsasseeb.Web.Controllers
                 recordsFiltered = param.Length,
                 recordsTotal = param.Length
             });
-
-            // View(data);
+            
+            
+            /*
+             check this link for more information
+            https://www.c-sharpcorner.com/article/jquery-datatables-with-asp-net-core-server-side-dynamic-multiple-column-searchin/
+            **/
+    
             // // You have to return data frmatted for datatable controls
             // search for any sample: datatables.net with MVC 
         }
