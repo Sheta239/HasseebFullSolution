@@ -1,11 +1,14 @@
 ﻿using Hasseeb.Application.Domain;
 using Hasseeb.Application.Repository;
+using JqueryDataTables.ServerSide.AspNetCoreWeb;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Hasseeb.Repository
 {
@@ -14,6 +17,7 @@ namespace Hasseeb.Repository
         private readonly MyContext _context;
         private DbSet<T> _entities;
         string errorMessage = string.Empty;
+        private readonly IConfigurationProvider mappingConfiguration;
 
         public Repository(MyContext context)
         {
@@ -36,9 +40,17 @@ namespace Hasseeb.Repository
             return _entities.SingleOrDefault(s => s.ID == ID);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll(DTParameters table)
         {
-            return _entities.AsEnumerable();
+            IQueryable<T> query =(IQueryable<T>)_entities.AsEnumerable();
+            query = new SearchOptionsProcessor<T, T>().Apply(query, table.Columns);
+
+            var Items = await query
+                .AsNoTracking()
+                .Skip(table.Start - 1 * table.Length)
+                .Take(table.Length)
+                .ToArrayAsync();
+            return Items;
         }
 
         public IQueryable<T> GetBy(Expression<Func<T, bool>> predicate)

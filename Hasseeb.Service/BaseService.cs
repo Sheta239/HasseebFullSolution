@@ -1,11 +1,13 @@
 ﻿using Hasseeb.Application.Domain;
 using Hasseeb.Application.Repository;
 using Hasseeb.Application.Service;
+using JqueryDataTables.ServerSide.AspNetCoreWeb;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Hasseeb.Service
 {
@@ -30,9 +32,9 @@ namespace Hasseeb.Service
             return _repository.GetBy(predicate);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll(DTParameters param)
         {
-            return _repository.GetAll();
+            return await _repository.GetAll(param);
         }
 
         public T GetID(int id)

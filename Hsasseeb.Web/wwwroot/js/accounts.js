@@ -1,8 +1,14 @@
 ﻿$(document).ready(function () {
     var oTable = $('#myDatatable').DataTable({
+        "processing": true, // for show progress bar  
+        "serverSide": true, // for process server side  
+        "filter": true, // this is for disable filter (search box)  
+        "orderMulti": false, // for disable multiple column at once  
         "ajax": {
-            "url": '/Accounts/GetAccounts',
-            "type": "get",
+            "url": "/Accounts/GetAccounts",
+            "contentType": "application/json; charset=utf-8",
+            "type": "GET",
+            async: true,
             "datatype": "json"
         },
         "columns": [
@@ -21,7 +27,8 @@
                 }
             }
         ]
-    })
+    });
+
     $('.tablecontainer').on('click', 'a.popup', function (e) {
         e.preventDefault();
         OpenPopup($(this).attr('href'));

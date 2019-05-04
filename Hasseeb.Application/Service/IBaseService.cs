@@ -1,14 +1,16 @@
 ﻿using Hasseeb.Application.Domain;
+using JqueryDataTables.ServerSide.AspNetCoreWeb;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Hasseeb.Application.Service
 {
     public interface IBaseService<T> where T : BaseObject
     {
-        IEnumerable<T> GetAll();
+        Task<IEnumerable<T>> GetAll(DTParameters param);
         T GetID(int id);
         void Insert(T entity);
         void Update(T entity);

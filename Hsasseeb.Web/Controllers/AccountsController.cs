@@ -10,6 +10,9 @@ using Hsasseeb.Web.Data;
 using Hasseeb.Application.Service;
 using Hsasseeb.Web.Models;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Session;
+using Microsoft.AspNetCore.Http;
+using JqueryDataTables.ServerSide.AspNetCoreWeb;
 
 namespace Hsasseeb.Web.Controllers
 {
@@ -32,10 +35,21 @@ namespace Hsasseeb.Web.Controllers
         {
             return View();
         }
-        public JsonResult GetAccounts()
+        public async Task<IActionResult> GetAccounts(DTParameters param)
         {
-            var data = _accountAppService.GetAll();
-            return Json(data);
+            var data = await _accountAppService.GetAll(param);
+
+            return new JsonResult(new DTResult<Account>
+            {
+                draw = param.Draw,
+                data = data,
+                recordsFiltered = param.Length,
+                recordsTotal = param.Length
+            });
+
+            // View(data);
+            // // You have to return data frmatted for datatable controls
+            // search for any sample: datatables.net with MVC 
         }
 
         [HttpGet]
@@ -159,8 +173,8 @@ namespace Hsasseeb.Web.Controllers
         // GET: Accounts
         public  IActionResult Index()
         {
-            var applicationDbContext = _accountAppService.GetAll();
-            return View(applicationDbContext);
+            //var applicationDbContext = _accountAppService.GetAll();
+            return View();
         }
 
         //// GET: Accounts/Details/5

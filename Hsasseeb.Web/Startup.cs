@@ -18,6 +18,7 @@ using Hasseeb.Service;
 using Hasseeb.Repository;
 using Hasseeb.Application.Repository;
 using Hasseeb.Application.Domain;
+using Newtonsoft.Json.Serialization;
 
 namespace Hsasseeb.Web
 {
@@ -43,12 +44,17 @@ namespace Hsasseeb.Web
             //services.AddSingleton<IAccountManager, AccountManager>();
             services.AddDbContext<MyContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HasseebDb")));
 
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            // services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped(serviceType: typeof(IAccountManager), implementationType: typeof(AccountManager));
             services.AddScoped(serviceType: typeof(IRepository<Account>), implementationType: typeof(Repository<Account>));
             services.AddScoped(serviceType: typeof(IAccountNatureManager), implementationType: typeof(AccountNatureManager));
             services.AddScoped(serviceType: typeof(IRepository<AccountNature>), implementationType: typeof(Repository<AccountNature>));
 
-
+            services
+                    .AddAntiforgery(options => options.HeaderName = "XSRF-TOKEN")
+                    .AddMvc()
+                    .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
