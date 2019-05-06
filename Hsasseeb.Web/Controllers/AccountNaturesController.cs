@@ -27,6 +27,7 @@ namespace Hsasseeb.Web.Controllers
         {
             return View(_accNatureAppService.GetAll());
         }
+       
 
         // GET: AccountNatures/Details/5
         public IActionResult Details(int id)
