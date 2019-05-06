@@ -32,9 +32,13 @@ namespace Hasseeb.Service
             return _repository.GetBy(predicate);
         }
 
-        public async Task<IEnumerable<T>> GetAll(DTParameters param)
+        public async Task<IEnumerable<T>> GetAllTable(DTParameters param)
         {
-            return await _repository.GetAll(param);
+            return await _repository.GetAllTable(param);
+        }
+        public IEnumerable<T> GetAll()
+        {
+            return _repository.GetAll();
         }
 
         public T GetID(int id)

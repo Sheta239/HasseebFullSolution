@@ -10,7 +10,8 @@ namespace Hasseeb.Application.Repository
 {
     public interface IRepository<T> where T:BaseObject
     {
-        Task<IEnumerable<T>> GetAll(DTParameters param);
+        Task<IEnumerable<T>> GetAllTable(DTParameters param);
+        IEnumerable<T> GetAll();
         T Get(int ID);
         IQueryable<T> GetBy(System.Linq.Expressions.Expression<Func<T, bool>> predicate);
         void Insert(T entity);

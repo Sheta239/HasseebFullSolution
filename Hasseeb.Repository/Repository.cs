@@ -40,7 +40,7 @@ namespace Hasseeb.Repository
             return _entities.SingleOrDefault(s => s.ID == ID);
         }
 
-        public async Task<IEnumerable<T>> GetAll(DTParameters table)
+        public async Task<IEnumerable<T>> GetAllTable(DTParameters table)
         {
             IQueryable<T> query =(IQueryable<T>)_entities.AsEnumerable();
             query = new SearchOptionsProcessor<T, T>().Apply(query, table.Columns);
@@ -51,6 +51,14 @@ namespace Hasseeb.Repository
                 .Take(table.Length)
                 .ToArrayAsync();
             return Items;
+
+        }
+
+
+        public IEnumerable<T> GetAll()
+        {
+            IEnumerable<T> list = _entities.ToList();
+            return list;
         }
 
         public IQueryable<T> GetBy(Expression<Func<T, bool>> predicate)

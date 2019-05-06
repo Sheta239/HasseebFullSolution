@@ -37,7 +37,7 @@ namespace Hsasseeb.Web.Controllers
         }
         public async Task<IActionResult> GetAccounts(DTParameters param)
         {
-            var data = await _accountAppService.GetAll(param);
+            var data = await _accountAppService.GetAllTable(param);
 
             return new JsonResult(new DTResult<Account>
             {
