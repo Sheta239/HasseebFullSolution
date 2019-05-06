@@ -15,7 +15,7 @@
 
             // Now Load Data Here 
             $.ajax({
-                url: "/Accounts/GetSubMenu",
+                url: "/SPAAccounts/GetSubMenu",
                 type: "GET",
                 data: data,
                 dataType: "json",

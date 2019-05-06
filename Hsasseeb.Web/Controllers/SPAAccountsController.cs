@@ -24,10 +24,61 @@ namespace Hsasseeb.Web.Controllers
     }
     public IActionResult Index()
         {
+            var geatAll = _accountAppService.GetAll();
 
-            return View();
+            List<Account> Parent = new List<Account>();
+            foreach (var item in geatAll)
+            {
+                Account viewPar = new Account();
+                if (item.ParentAccountID == null || item.ParentAccountID == 0)
+                {
+                    viewPar.AccountDesc = item.AccountDesc;
+                    viewPar.ID = item.ID;
+                    viewPar.AccountName = item.AccountName;
+                    viewPar.AccountNatureID = item.AccountNatureID;
+                    viewPar.AccountSerial = item.AccountSerial;
+                    viewPar.Active = item.Active;
+                    viewPar.AddDate = item.AddDate;
+                    viewPar.GroupOrder = item.GroupOrder;
+                    viewPar.IsMain = item.IsMain;
+                    viewPar.ParentAccountID = item.ParentAccountID;
+                    Parent.Add(viewPar);
+
+                }
+
+            }
+            return View(Parent);
         }
+        public JsonResult GetSubMenu(string pid)
+        {
+            System.Threading.Thread.Sleep(5000);
+            var geatAll = _accountAppService.GetAll();
+            List<Account> Child = new List<Account>();
+            int pID = 0;
+            int.TryParse(pid, out pID);
 
+            foreach (var item in geatAll)
+            {
+                Account viewPar = new Account();
+                if (item.ParentAccountID == pID)
+                {
+                    viewPar.AccountDesc = item.AccountDesc;
+                    viewPar.ID = item.ID;
+                    viewPar.AccountName = item.AccountName;
+                    viewPar.AccountNatureID = item.AccountNatureID;
+                    viewPar.AccountSerial = item.AccountSerial;
+                    viewPar.Active = item.Active;
+                    viewPar.AddDate = item.AddDate;
+                    viewPar.GroupOrder = item.GroupOrder;
+                    viewPar.IsMain = item.IsMain;
+                    viewPar.ParentAccountID = item.ParentAccountID;
+                    Child.Add(viewPar);
+                }
+            }
+
+            return Json(Child);
+            ////return new JsonResult { Data = Child, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
         public JsonResult AccountNatures()
         {
             return Json(_accNatureAppService.GetAll());

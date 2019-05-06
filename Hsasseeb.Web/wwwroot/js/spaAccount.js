@@ -56,8 +56,17 @@ $(".AddNew").on('click', function () {
     $("#MyModal").addClass('show').css('display', 'block');
 });
 
+
+$(".tree").on('click', function () {
+    $('#form').each(function () { this.reset() });
+    //$("#UserID").val(0);
+    $("#ModalTitle").html("Accounts Tree");
+    $("#TreeModal").addClass('show').css('display', 'block');
+});
+
 $(".close").on('click', function () {
     $("#MyModal").removeClass('show').css('display', '');
+    $("#TreeModal").removeClass('show').css('display', '');
     $("#DeleteConfirmation").removeClass('show').css('display', '');
 });
 
