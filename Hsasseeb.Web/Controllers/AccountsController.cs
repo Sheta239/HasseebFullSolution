@@ -18,16 +18,16 @@ namespace Hsasseeb.Web.Controllers
 {
     public class AccountsController : Controller
     {
-      
-            private readonly IAccountManager _accountAppService;
-            private readonly IAccountNatureManager _accNatureAppService;
+
+        private readonly IAccountManager _accountAppService;
+        private readonly IAccountNatureManager _accNatureAppService;
 
 
-            public AccountsController(IAccountManager accountAppService, IAccountNatureManager accNatureAppService)
-            {
-                _accountAppService = accountAppService;
-                _accNatureAppService = accNatureAppService;
-            }
+        public AccountsController(IAccountManager accountAppService, IAccountNatureManager accNatureAppService)
+        {
+            _accountAppService = accountAppService;
+            _accNatureAppService = accNatureAppService;
+        }
 
         #region SPA Accounts 
 
@@ -35,24 +35,33 @@ namespace Hsasseeb.Web.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> GetAccounts(DTParameters param)
+        public async Task<IActionResult> GetAccounts([FromBody]DTParameters param)
         {
-            var data = await _accountAppService.GetAllTable(param);
-
-            return new JsonResult(new DTResult<Account>
+            try
             {
-                draw = param.Draw,
-                data = data,
-                recordsFiltered = param.Length,
-                recordsTotal = param.Length
-            });
-            
-            
+                var data = await _accountAppService.GetAllTable(param);
+
+                return new JsonResult(new DTResult<Account>
+                {
+                    draw = param.Draw,
+                    data = data,
+                    recordsFiltered = param.Length,
+                    recordsTotal = param.Length
+                });
+            }catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return new JsonResult(new { error = "Thres error" });
+            }
+
+
+
+
             /*
              check this link for more information
             https://www.c-sharpcorner.com/article/jquery-datatables-with-asp-net-core-server-side-dynamic-multiple-column-searchin/
             **/
-    
+
             // // You have to return data frmatted for datatable controls
             // search for any sample: datatables.net with MVC 
         }

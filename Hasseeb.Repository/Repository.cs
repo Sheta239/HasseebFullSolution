@@ -42,15 +42,27 @@ namespace Hasseeb.Repository
 
         public async Task<IEnumerable<T>> GetAllTable(DTParameters table)
         {
-            IQueryable<T> query =(IQueryable<T>)_entities.AsEnumerable();
-            query = new SearchOptionsProcessor<T, T>().Apply(query, table.Columns);
+            try
+            {
+                IQueryable<T> query = (IQueryable<T>)_entities.ToList();
+                query = new SearchOptionsProcessor<T, T>().Apply(query, table.Columns);
+                query = new SortOptionsProcessor<T, T>().Apply(query,table);
 
-            var Items = await query
-                .AsNoTracking()
-                .Skip(table.Start - 1 * table.Length)
-                .Take(table.Length)
-                .ToArrayAsync();
-            return Items;
+                var Items = await query
+                    .AsNoTracking()
+                    .Skip(table.Start - 1 * table.Length)
+                    .Take(table.Length)
+                    .ToArrayAsync();
+                return Items;
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+
+            
 
         }
 
