@@ -148,15 +148,17 @@
                                     <ul>
                                         @foreach (var i in Model)
                                         {
-                                            <li>
-                                                <span class="collapseTree collapsible" data-loaded="false" pid="@i.ID">&nbsp;</span>
-                                                <span>
-                                                    @i.AccountName
-                                                </span>
-                                                <a asp-action="Edit" asp-route-id="@i.ID">Edit</a> |
-                                                <a asp-action="Delete" asp-route-id="@i.ID">Delete</a>
+                                        <li>
+                                            <span class="collapseTree collapsible" data-loaded="false" pid="@i.ID">&nbsp;</span>
+                                            <span>
+                                                @i.AccountName
+                                            </span>
+                                             <a href='#' class='btn btn-warning' onclick='EditAccount(@i.ID)'><span class='glyphicon glyphicon-trash'></span> Edit</a>
+                                             ||<a href='#' class='btn btn-danger' onclick='DeleteAccount(@i.ID)'><span class='glyphicon glyphicon-trash'></span> Delete</a>
 
-                                            </li>
+                                            
+
+                                        </li>
                                         }
                                     </ul>
                                 }

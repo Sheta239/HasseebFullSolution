@@ -7,8 +7,8 @@ function DataBind(AccountList) {
             "<td>" + AccountList[i].AccountName + "</td>" +
             "<td>" + AccountList[i].AccountDesc + "</td>" +
           
-            "<td>" + "<a href='#' class='btn btn-warning' onclick='EditAccount(" + AccountList[i].ID + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
-            "<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteAccount(" + AccountList[i].ID + ")'><span class='glyphicon glyphicon-trash'></span></a>" + "</td>" +
+            "<td>" + "<a href='#' class='btn btn-warning' onclick='EditAccount(" + AccountList[i].ID + ")' ><span class='glyphicon glyphicon-edit'></span> Edit </a>" + "</td>" +
+            "<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteAccount(" + AccountList[i].ID + ")'><span class='glyphicon glyphicon-trash'></span> Delete</a>" + "</td>" +
             "</tr>";
         SetData.append(Data);
         $("#LoadingStatus").html(" ");
@@ -51,7 +51,6 @@ $.ajax({
 
 $(".AddNew").on('click', function () {
     $('#form').each(function () { this.reset() });
-    //$("#UserID").val(0);
     $("#ModalTitle").html("Add New Account");
     $("#MyModal").addClass('show').css('display', 'block');
 });
@@ -59,7 +58,6 @@ $(".AddNew").on('click', function () {
 
 $(".tree").on('click', function () {
     $('#form').each(function () { this.reset() });
-    //$("#UserID").val(0);
     $("#ModalTitle").html("Accounts Tree");
     $("#TreeModal").addClass('show').css('display', 'block');
 });
@@ -75,6 +73,7 @@ $(".close").on('click', function () {
 
 
 function EditAccount(ID) {
+    $("#TreeModal").removeClass('show').css('display', '');
     var url = "/SPAAccounts/GetAccountByID?id=" + ID;
     $("#ModalTitle").html("Update Record");
     $("#MyModal").addClass('show').css('display', 'block');
@@ -128,6 +127,7 @@ $("#SaveFeatureRecord").click(function () {
 
 
 var DeleteAccount = function (ID) {
+    $("#TreeModal").removeClass('show').css('display', '');
     $("#ID").val(ID);
     $("#DeleteConfirmation").addClass('show').css('display', 'block');
 }

@@ -44,15 +44,16 @@ namespace Hasseeb.Repository
         {
             try
             {
-                IQueryable<T> query = (IQueryable<T>)_entities.ToList();
-                query = new SearchOptionsProcessor<T, T>().Apply(query, table.Columns);
-                query = new SortOptionsProcessor<T, T>().Apply(query,table);
+                //IQueryable<T> query = (IQueryable<T>)_entities.ToList();
+                //query = new SearchOptionsProcessor<T, T>().Apply(query, table.Columns);
+                //query = new SortOptionsProcessor<T, T>().Apply(query,table);
 
-                var Items = await query
+                var Items = await _entities
                     .AsNoTracking()
                     .Skip(table.Start - 1 * table.Length)
                     .Take(table.Length)
-                    .ToArrayAsync();
+                    .ToListAsync();
+
                 return Items;
 
             }

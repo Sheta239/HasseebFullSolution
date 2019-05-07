@@ -41,14 +41,18 @@ namespace Hsasseeb.Web.Controllers
             {
                 var data = await _accountAppService.GetAllTable(param);
 
-                return new JsonResult(new DTResult<Account>
+                var results =  new JsonResult(new DTResult<Account>
                 {
                     draw = param.Draw,
                     data = data,
-                    recordsFiltered = param.Length,
-                    recordsTotal = param.Length
+                    recordsFiltered = data.Count(),
+                    recordsTotal = data.Count()
                 });
-            }catch(Exception e)
+
+
+                return results;
+            }
+            catch(Exception e)
             {
                 Console.WriteLine(e.Message);
                 return new JsonResult(new { error = "Thres error" });
