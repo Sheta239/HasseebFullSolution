@@ -105,7 +105,7 @@ $.ajax({
 
 $.ajax({
     type: "Get",
-    url: "/SPAAccounts/GetAccounts",
+    url: "/SPAAccounts/AllAccounts",
     dataType: "json",
     success: function (data) {
 
@@ -159,8 +159,10 @@ function EditAccount(ID) {
             $("#GroupOrder").val(data.GroupOrder);
             $("#Active").val(data.Active);
             $("#IsMain").val(data.IsMain);
-            $("#AccountNatureID option:selected").text(data.ID);
-            $("#ParentAccountID option:selected").val(data.ID);
+            $("#AccountNatureID option:selected").val(data.AccountNatureID);
+            $("#AccountNatureID option:selected").text(data.AccountNatureName);
+            $("#ParentAccountID option:selected").val(data.ParentAccountID);
+            $("#ParentAccountID option:selected").text(data.ParentAccountName);
 
         }
     });
@@ -188,7 +190,7 @@ $("#SaveFeatureRecord").click(function () {
     $.ajax({
         type: "Post",
         url: "/SPAAccounts/Save",
-        data: JSON.stringify({
+        data: {
             AccountSerial: $("#AccountSerial").val(),
             AccountName: $("#AccountName").val(),
             AccountDesc: $("#AccountDesc").val(),
@@ -197,7 +199,7 @@ $("#SaveFeatureRecord").click(function () {
             IsMain: isMain,
             AccountNatureID: $("#AccountNatureID option:selected").val(),
             ParentAccountID: $("#ParentAccountID option:selected").val()
-        }),
+        },
         success: function (result) {
             alert("Success!..");
             window.location.href = "/SPAAccounts/Index";
@@ -221,6 +223,8 @@ var ConfirmDelete = function () {
         url: "/SPAAccounts/DeleteAccount?ID=" + ID,
         success: function (result) {
             $("#DeleteConfirmation").modal("hide");
+            window.location.href = "/SPAAccounts/Index";
+
         }
     })
 }

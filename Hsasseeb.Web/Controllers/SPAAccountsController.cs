@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hasseeb.Application.Domain;
 using Hasseeb.Application.Service;
+using Hasseeb.Application.ViewModels;
 using Hasseeb.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -97,11 +98,40 @@ namespace Hsasseeb.Web.Controllers
 
         }
 
+        public JsonResult AllAccounts()
+        {
+            var list = _accountAppService.GetAll();
+
+            return Json(list);
+
+        }
 
         public IActionResult GetAccountByID(int id)
         {
             var account = _accountAppService.GetID(id);
-            return Json(account);
+            var ParentAccount = new Account();
+            var accountNature = new AccountNature();
+            if (account.ParentAccountID != null)
+            {
+                 ParentAccount = _accountAppService.GetID((int)account.ParentAccountID);
+            }
+            if (account.AccountNatureID != null)
+            {
+                accountNature = _accNatureAppService.GetID((int)account.AccountNatureID);
+            }
+            AccountViewModel model = new AccountViewModel();
+            model.ID = account.ID;
+            model.AccountDesc = account.AccountDesc;
+            model.AccountName = account.AccountName;
+            model.AccountNatureID = account.AccountNatureID;
+            model.AccountNatureName = accountNature.AccountNatureName;
+            model.AccountSerial = account.AccountSerial;
+            model.Active = account.Active;
+            model.GroupOrder = account.GroupOrder;
+            model.IsMain = account.IsMain;
+            model.ParentAccountID = account.ParentAccountID;
+            model.ParentAccountName = ParentAccount.AccountName;
+            return Json(model);
 
         }
 
@@ -114,15 +144,16 @@ namespace Hsasseeb.Web.Controllers
             if (ModelState.IsValid)
             {
 
-                if (newAccount != null)
+                if (newAccount == null)
                 {
-                   
-                    _accountAppService.Update(account);
+                    _accountAppService.Insert(account);
+
 
                 }
                 else
                 {
-                    _accountAppService.Insert(account);
+                    _accountAppService.Update(account);
+
                 }
 
             }
