@@ -21,10 +21,12 @@ namespace Hasseeb.Service
 
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
+            bool result = false;
             _repository.Delete(_repository.Get(id));
-            _repository.SaveChanges();
+           result = _repository.SaveChanges();
+            return result;
         }
 
         public IQueryable<T> FindBy(Expression<Func<T, bool>> predicate)
@@ -36,7 +38,7 @@ namespace Hasseeb.Service
         {
             return await _repository.GetAllTable(param);
         }
-        public IEnumerable<T> GetAll()
+        public List<T> GetAll()
         {
             return _repository.GetAll();
         }

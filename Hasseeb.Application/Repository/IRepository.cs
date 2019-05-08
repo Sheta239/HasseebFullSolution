@@ -11,13 +11,13 @@ namespace Hasseeb.Application.Repository
     public interface IRepository<T> where T:BaseObject
     {
         Task<IEnumerable<T>> GetAllTable(DTParameters param);
-        IEnumerable<T> GetAll();
+        List<T> GetAll();
         T Get(int ID);
         IQueryable<T> GetBy(System.Linq.Expressions.Expression<Func<T, bool>> predicate);
         void Insert(T entity);
         void Update(T entity);
         void Delete(T entity);
 
-        void SaveChanges();
+        bool SaveChanges();
     }
 }

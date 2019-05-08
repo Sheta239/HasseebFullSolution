@@ -14,7 +14,6 @@
         <thead>
 
             <tr>
-                <th> ID</th>
                 <th>Account Name</th>
                 <th>Account Desc</th>
                 <th>Edit</th>
@@ -23,10 +22,14 @@
 
             </tr>
         </thead>
-        <tbody id="SetList">
+        <tbody id="tblData">
             <tr id="LoadingStatus" style="color:red"></tr>
         </tbody>
     </table>
+    <div id="paged">
+
+
+    </div>
 
 
 
@@ -81,13 +84,7 @@
                                 <input type="email" class="form-control" id="GroupOrder">
                             </div>
                         </div>
-                        <div class="form-row">
-
-                            <div class="form-group col-md-4">
-                                <label for="">date</label>
-                                <input type="datetime" class="form-control" id="AddDate">
-                            </div>
-                        </div>
+                       
                         <div class="form-check">
                             <label class="checkbox-inline">Active <input type="checkbox" id="Active"></label>
 

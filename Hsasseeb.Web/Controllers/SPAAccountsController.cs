@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hasseeb.Application.Domain;
 using Hasseeb.Application.Service;
+using Hasseeb.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ReflectionIT.Mvc.Paging;
 
 namespace Hsasseeb.Web.Controllers
 {
@@ -86,11 +88,13 @@ namespace Hsasseeb.Web.Controllers
 
         #region SPA Accounts 
 
-        public IActionResult GetAccounts()
+        public IActionResult GetAccounts(int pageNumber = 1, int pageSize = 20)
         {
             var list = _accountAppService.GetAll();
-            return Json(list);
-           
+
+            var pagedData = Pagination.PagedResult(list, pageNumber, pageSize);
+            return Json(pagedData);
+
         }
 
 
@@ -103,14 +107,16 @@ namespace Hsasseeb.Web.Controllers
 
       
         [HttpPost]
-        public ActionResult Save(Account account)
+        public JsonResult Save(Account account)
         {
+            account.AddDate = DateTime.Now;
             var newAccount = _accountAppService.GetID(account.ID);
             if (ModelState.IsValid)
             {
 
                 if (newAccount != null)
                 {
+                   
                     _accountAppService.Update(account);
 
                 }
@@ -121,16 +127,15 @@ namespace Hsasseeb.Web.Controllers
 
             }
            
-            return View(account);
+            return Json(account);
         }
         
         [HttpPost]
-        [ActionName("Delete")]
-        public ActionResult DeleteAccount(int ID)
+        public JsonResult DeleteAccount(int ID)
         {
             bool status = false;
 
-            _accountAppService.Delete(ID);
+           status = _accountAppService.Delete(ID);
             return Json(new { status = status });
 
         }

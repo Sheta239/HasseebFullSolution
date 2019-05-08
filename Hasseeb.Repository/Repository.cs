@@ -17,7 +17,6 @@ namespace Hasseeb.Repository
         private readonly MyContext _context;
         private DbSet<T> _entities;
         string errorMessage = string.Empty;
-        private readonly IConfigurationProvider mappingConfiguration;
 
         public Repository(MyContext context)
         {
@@ -44,15 +43,12 @@ namespace Hasseeb.Repository
         {
             try
             {
-                //IQueryable<T> query = (IQueryable<T>)_entities.ToList();
-                //query = new SearchOptionsProcessor<T, T>().Apply(query, table.Columns);
-                //query = new SortOptionsProcessor<T, T>().Apply(query,table);
-
+               
                 var Items = await _entities
                     .AsNoTracking()
                     .Skip(table.Start - 1 * table.Length)
                     .Take(table.Length)
-                    .ToListAsync();
+                    .ToArrayAsync();
 
                 return Items;
 
@@ -68,9 +64,9 @@ namespace Hasseeb.Repository
         }
 
 
-        public IEnumerable<T> GetAll()
+        public List<T> GetAll()
         {
-            IEnumerable<T> list = _entities.ToList();
+            List<T> list = _entities.ToList();
             return list;
         }
 
@@ -90,9 +86,9 @@ namespace Hasseeb.Repository
             _entities.Add(entity);
         }
 
-        public void SaveChanges()
+        public bool SaveChanges()
         {
-            _context.SaveChanges();
+          return  _context.SaveChanges() > 0;
         }
 
         public void Update(T entity)

@@ -11,11 +11,11 @@ namespace Hasseeb.Application.Service
     public interface IBaseService<T> where T : BaseObject
     {
         Task<IEnumerable<T>> GetAllTable(DTParameters param);
-        IEnumerable<T> GetAll();
+        List<T> GetAll();
         T GetID(int id);
         void Insert(T entity);
         void Update(T entity);
-        void Delete(int id);
+        bool Delete(int id);
         IQueryable<T> FindBy(System.Linq.Expressions.Expression<Func<T, bool>> predicate);
     }
 }

@@ -19,6 +19,7 @@ using Hasseeb.Repository;
 using Hasseeb.Application.Repository;
 using Hasseeb.Application.Domain;
 using Newtonsoft.Json.Serialization;
+using ReflectionIT.Mvc.Paging;
 
 namespace Hsasseeb.Web
 {
@@ -50,6 +51,10 @@ namespace Hsasseeb.Web
             services.AddScoped(serviceType: typeof(IRepository<Account>), implementationType: typeof(Repository<Account>));
             services.AddScoped(serviceType: typeof(IAccountNatureManager), implementationType: typeof(AccountNatureManager));
             services.AddScoped(serviceType: typeof(IRepository<AccountNature>), implementationType: typeof(Repository<AccountNature>));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            services.AddPaging();
+#pragma warning restore CS0618 // Type or member is obsolete
 
             services
                     .AddAntiforgery(options => options.HeaderName = "XSRF-TOKEN")
