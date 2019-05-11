@@ -9,5 +9,6 @@ namespace Hasseeb.Application.Service
     public interface IAccountManager : IBaseService<Account>
     {
         Account GetAccountNatureWithItems(int id);
+        bool UpdateAccount(Account account);
     }
 }

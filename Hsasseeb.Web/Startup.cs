@@ -44,6 +44,7 @@ namespace Hsasseeb.Web
 
             //services.AddSingleton<IAccountManager, AccountManager>();
             services.AddDbContext<MyContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HasseebDb")));
+           
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             // services.AddTransient<IUnitOfWork, UnitOfWork>();

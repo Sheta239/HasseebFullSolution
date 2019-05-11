@@ -95,11 +95,13 @@ $.ajax({
     dataType: "json",
     success: function (data) {
 
-        var s = '<option value="-1">Please Select One</option>';
+        var v = '<option value="-1">Please Select One</option>';
+        v += '<option value=""></option>';
+
         for (var i = 0; i < data.length; i++) {
-            s += '<option value="' + data[i].ID + '">' + data[i].AccountNatureName + '</option>';
+            v += '<option value="' + data[i].ID + '">' + data[i].AccountNatureName + '</option>';
         }
-        $("#AccountNatureID").append(s);
+        $("#AccountNatureID").append(v);
     }
 });
 
@@ -110,6 +112,7 @@ $.ajax({
     success: function (data) {
 
         var s = '<option value="-1">Please Select One</option>';
+        s += '<option value=""></option>';
         for (var i = 0; i < data.length; i++) {
             s += '<option value="' + data[i].ID + '">' + data[i].AccountName + '</option>';
         }
@@ -125,6 +128,12 @@ $(".AddNew").on('click', function () {
     $("#MyModal").addClass('show').css('display', 'block');
 });
 
+$(".AddNewNature").on('click', function () {
+    $('#form').each(function () { this.reset() });
+    $("#ModalTitle").html("Add New Account Nature");
+    $("#AccountNature").addClass('show').css('display', 'block');
+});
+
 
 $(".tree").on('click', function () {
     $('#form').each(function () { this.reset() });
@@ -136,6 +145,7 @@ $(".close").on('click', function () {
     $("#MyModal").removeClass('show').css('display', '');
     $("#TreeModal").removeClass('show').css('display', '');
     $("#DeleteConfirmation").removeClass('show').css('display', '');
+    $("#AccountNature").removeClass('show').css('display', '');
 });
 
 
@@ -152,13 +162,14 @@ function EditAccount(ID) {
         url: url,
         dataType: "json",
         success: function (data) {
-
+            $("#ID").val(data.ID);
             $("#AccountSerial").val(data.AccountSerial);
             $("#AccountName").val(data.AccountName);
             $("#AccountDesc").val(data.AccountDesc);
             $("#GroupOrder").val(data.GroupOrder);
-            $("#Active").val(data.Active);
-            $("#IsMain").val(data.IsMain);
+            document.getElementById("Active").checked = data.Active;
+            //$("Active").prop("checked", data.Active);
+            document.getElementById("IsMain").checked = data.IsMain;
             $("#AccountNatureID option:selected").val(data.AccountNatureID);
             $("#AccountNatureID option:selected").text(data.AccountNatureName);
             $("#ParentAccountID option:selected").val(data.ParentAccountID);
@@ -168,9 +179,43 @@ function EditAccount(ID) {
     });
 }
 
+function EditAccountNature(ID) {
+    $("#TreeModal").removeClass('show').css('display', '');
+    var url = "/SPAAccounts/GetAccountNatureByID?id=" + ID;
+    $("#ModalTitle").html("Update Record");
+    $("#AccountNature").addClass('show').css('display', 'block');
+    $.ajax({
+        type: "Post",
+        url: url,
+        dataType: "json",
+        success: function (data) {
+            $("#ID").val(data.ID);
+            $("#AccountNatureName").val(data.AccountNatureName);
+           
 
+        }
+    });
+}
 
-$("#SaveFeatureRecord").click(function () {
+$("#SaveAccountNature").click(function () {
+    
+    $.ajax({
+        type: "Post",
+        url: "/SPAAccounts/SaveAccountNature",
+        data: {
+            ID: $("#ID").val(),
+            AccountNatureName: $("#AccountNatureName").val(),
+            
+        },
+        success: function (result) {
+            alert("Success!..");
+            window.location.href = "/SPAAccounts/Index";
+            $("#MyModal").modal("hide");
+
+        }
+    })
+});
+$("#SaveAccount").click(function () {
     var active = false;
     var isMain = false;
 
@@ -191,14 +236,15 @@ $("#SaveFeatureRecord").click(function () {
         type: "Post",
         url: "/SPAAccounts/Save",
         data: {
+            ID: $("#ID").val(),
             AccountSerial: $("#AccountSerial").val(),
             AccountName: $("#AccountName").val(),
             AccountDesc: $("#AccountDesc").val(),
             GroupOrder: $("#GroupOrder").val(),
             Active: active,
             IsMain: isMain,
-            AccountNatureID: $("#AccountNatureID option:selected").val(),
-            ParentAccountID: $("#ParentAccountID option:selected").val()
+            AccountNature: $("#AccountNatureID option:selected").val(),
+            ParentAccount: $("#ParentAccountID option:selected").val()
         },
         success: function (result) {
             alert("Success!..");
@@ -209,7 +255,7 @@ $("#SaveFeatureRecord").click(function () {
     })
 });
 
-var deletedId =0;
+
 var DeleteAccount = function (id) {
     $("#TreeModal").removeClass('show').css('display', '');
     $("#ID").val(id);
@@ -221,6 +267,25 @@ var ConfirmDelete = function () {
     $.ajax({
         type: "POST",
         url: "/SPAAccounts/DeleteAccount?ID=" + ID,
+        success: function (result) {
+            $("#DeleteConfirmation").modal("hide");
+            window.location.href = "/SPAAccounts/Index";
+
+        }
+    })
+};
+
+var DeleteAccountNature = function (id) {
+    $("#TreeModal").removeClass('show').css('display', '');
+    $("#ID").val(id);
+    $("#DeleteConfirmation").addClass('show').css('display', 'block');
+    console.log(id);
+}
+var ConfirmDelete = function () {
+    var ID = $("#ID").val();;
+    $.ajax({
+        type: "POST",
+        url: "/SPAAccounts/DeleteAccountNature?ID=" + ID,
         success: function (result) {
             $("#DeleteConfirmation").modal("hide");
             window.location.href = "/SPAAccounts/Index";

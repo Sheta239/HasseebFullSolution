@@ -56,6 +56,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Hasseeb.Application\Hasseeb.Application.csproj" />
     <ProjectReference Include="..\Hasseeb.Repository\Hasseeb.Repository.csproj" />
+    <ProjectReference Include="..\Hasseeb.Service\Hasseeb.Service.csproj" />
   </ItemGroup>
 
 </Project>

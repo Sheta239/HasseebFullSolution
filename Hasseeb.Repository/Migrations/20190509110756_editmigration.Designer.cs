@@ -4,14 +4,16 @@ using Hasseeb.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Hasseeb.Repository.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20190509110756_editmigration")]
+    partial class editmigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,7 +31,7 @@ namespace Hasseeb.Repository.Migrations
 
                     b.Property<string>("AccountName");
 
-                    b.Property<int?>("AccountNature");
+                    b.Property<int?>("AccountNatureID");
 
                     b.Property<string>("AccountSerial");
 
@@ -41,7 +43,7 @@ namespace Hasseeb.Repository.Migrations
 
                     b.Property<bool>("IsMain");
 
-                    b.Property<int?>("ParentAccount");
+                    b.Property<int?>("ParentAccountID");
 
                     b.HasKey("ID");
 

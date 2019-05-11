@@ -15,7 +15,7 @@
 
             // Now Load Data Here 
             $.ajax({
-                url: "/Accounts/GetSubMenu",
+                url: "/SPAAccounts/GetSubMenu",
                 type: "GET",
                 data: data,
                 dataType: "json",
@@ -30,7 +30,7 @@
 
                             $ul.append(
                                 $("<li></li>").append(
-                                    "<span class='collapseTree collapsible' data-loaded='false' pid='" + ele.ID + "'>&nbsp;</span>" +
+                                    "<span class=' collapsible' data-loaded='false' pid='" + ele.ID + "'>&nbsp;</span>" +
                                     "<span>" + ele.AccountName + "</span>" +'  ||'+
                                     '<a href="#" class="btn btn - warning" onclick="EditAccount(' + ele.ID + ')"><i class = "glyphicon glyphicon-pencil"> </i>Edit</a>'
                                     + '  ||' +

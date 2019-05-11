@@ -10,12 +10,22 @@ namespace Hasseeb.Service
 {
     public class AccountManager : BaseService<Account>, IAccountManager
     {
-        public AccountManager(IRepository<Account> repository) : base(repository)
+        private readonly Repository.MyContext _context;
+        public AccountManager(IRepository<Account> repository , Repository.MyContext context) : base(repository)
         {
+            _context = context;
         }
         public Account GetAccountNatureWithItems(int id)
         {
             return _repository.GetAll().Where(x => x.ID == id).ToList().First();
+        }
+
+        public bool UpdateAccount(Account account)
+        {
+            bool result = false;
+            _context.Accounts.Update(account);
+            result = _context.SaveChanges() > 0;
+            return result;
         }
     }
 }

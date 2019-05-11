@@ -97,8 +97,7 @@ namespace Hasseeb.Repository
             {
                 throw new ArgumentNullException("entity");
             }
-
-            _context.Entry(entity).State = EntityState.Modified;
+             _context.Entry(entity).State = EntityState.Modified;
         }
     }
 }

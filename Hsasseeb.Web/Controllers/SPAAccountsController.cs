@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hasseeb.Application.Domain;
 using Hasseeb.Application.Service;
 using Hasseeb.Application.ViewModels;
+using Hasseeb.Repository;
 using Hasseeb.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,44 +14,25 @@ using ReflectionIT.Mvc.Paging;
 namespace Hsasseeb.Web.Controllers
 {
     public class SPAAccountsController : Controller
-    { 
+    {
+
+        private readonly MyContext _ctx;
+        private readonly IAccountManager _accountAppService;
+        private readonly IAccountNatureManager _accNatureAppService;
 
 
-    private readonly IAccountManager _accountAppService;
-    private readonly IAccountNatureManager _accNatureAppService;
-
-
-    public SPAAccountsController(IAccountManager accountAppService, IAccountNatureManager accNatureAppService)
+    public SPAAccountsController(IAccountManager accountAppService, IAccountNatureManager accNatureAppService , MyContext ctx)
     {
         _accountAppService = accountAppService;
         _accNatureAppService = accNatureAppService;
+            _ctx = ctx;
     }
     public IActionResult Index()
         {
-            var geatAll = _accountAppService.GetAll();
+            var geatAll = _accNatureAppService.GetAll();
 
-            List<Account> Parent = new List<Account>();
-            foreach (var item in geatAll)
-            {
-                Account viewPar = new Account();
-                if (item.ParentAccountID == null || item.ParentAccountID == 0)
-                {
-                    viewPar.AccountDesc = item.AccountDesc;
-                    viewPar.ID = item.ID;
-                    viewPar.AccountName = item.AccountName;
-                    viewPar.AccountNatureID = item.AccountNatureID;
-                    viewPar.AccountSerial = item.AccountSerial;
-                    viewPar.Active = item.Active;
-                    viewPar.AddDate = item.AddDate;
-                    viewPar.GroupOrder = item.GroupOrder;
-                    viewPar.IsMain = item.IsMain;
-                    viewPar.ParentAccountID = item.ParentAccountID;
-                    Parent.Add(viewPar);
-
-                }
-
-            }
-            return View(Parent);
+             
+            return View(geatAll);
         }
         public JsonResult GetSubMenu(string pid)
         {
@@ -63,18 +45,18 @@ namespace Hsasseeb.Web.Controllers
             foreach (var item in geatAll)
             {
                 Account viewPar = new Account();
-                if (item.ParentAccountID == pID)
+                if (item.AccountNature == pID)
                 {
                     viewPar.AccountDesc = item.AccountDesc;
                     viewPar.ID = item.ID;
                     viewPar.AccountName = item.AccountName;
-                    viewPar.AccountNatureID = item.AccountNatureID;
+                    viewPar.AccountNature = item.AccountNature;
                     viewPar.AccountSerial = item.AccountSerial;
                     viewPar.Active = item.Active;
                     viewPar.AddDate = item.AddDate;
                     viewPar.GroupOrder = item.GroupOrder;
                     viewPar.IsMain = item.IsMain;
-                    viewPar.ParentAccountID = item.ParentAccountID;
+                    viewPar.ParentAccount = item.ParentAccount;
                     Child.Add(viewPar);
                 }
             }
@@ -111,25 +93,25 @@ namespace Hsasseeb.Web.Controllers
             var account = _accountAppService.GetID(id);
             var ParentAccount = new Account();
             var accountNature = new AccountNature();
-            if (account.ParentAccountID != null)
+            if (account.ParentAccount != null)
             {
-                 ParentAccount = _accountAppService.GetID((int)account.ParentAccountID);
+                 ParentAccount = _accountAppService.GetID((int)account.ParentAccount);
             }
-            if (account.AccountNatureID != null)
+            if (account.AccountNature != null)
             {
-                accountNature = _accNatureAppService.GetID((int)account.AccountNatureID);
+                accountNature = _accNatureAppService.GetID((int)account.AccountNature);
             }
             AccountViewModel model = new AccountViewModel();
             model.ID = account.ID;
             model.AccountDesc = account.AccountDesc;
             model.AccountName = account.AccountName;
-            model.AccountNatureID = account.AccountNatureID;
+            model.AccountNatureID = account.AccountNature;
             model.AccountNatureName = accountNature.AccountNatureName;
             model.AccountSerial = account.AccountSerial;
             model.Active = account.Active;
             model.GroupOrder = account.GroupOrder;
             model.IsMain = account.IsMain;
-            model.ParentAccountID = account.ParentAccountID;
+            model.ParentAccountID = account.ParentAccount;
             model.ParentAccountName = ParentAccount.AccountName;
             return Json(model);
 
@@ -137,28 +119,41 @@ namespace Hsasseeb.Web.Controllers
 
       
         [HttpPost]
-        public JsonResult Save(Account account)
+        public JsonResult Save(Account item)
         {
-            account.AddDate = DateTime.Now;
-            var newAccount = _accountAppService.GetID(account.ID);
-            if (ModelState.IsValid)
-            {
-
+            var newAccount = _accountAppService.GetID(item.ID);
+            
+         
                 if (newAccount == null)
                 {
-                    _accountAppService.Insert(account);
+                    _accountAppService.Insert(item);
 
 
                 }
                 else
                 {
-                    _accountAppService.Update(account);
 
-                }
+
+                Account viewPar = _ctx.Accounts.FirstOrDefault(F => F.ID == item.ID);
+
+                viewPar.AccountDesc = item.AccountDesc;
+                viewPar.ID = item.ID;
+                viewPar.AccountName = item.AccountName;
+                viewPar.AccountNature = item.AccountNature;
+                viewPar.AccountSerial = item.AccountSerial;
+                viewPar.Active = item.Active;
+                viewPar.AddDate = item.AddDate;
+                viewPar.GroupOrder = item.GroupOrder;
+                viewPar.IsMain = item.IsMain;
+                viewPar.ParentAccount = item.ParentAccount;
+                _ctx.SaveChanges();
+
 
             }
+
+            
            
-            return Json(account);
+            return Json(item);
         }
         
         [HttpPost]
@@ -170,6 +165,56 @@ namespace Hsasseeb.Web.Controllers
             return Json(new { status = status });
 
         }
+
+
+        public IActionResult GetAccountNatureByID(int id)
+        {
+            var account = _accNatureAppService.GetID(id);
+            
+            
+            return Json(account);
+
+        }
+
+
+        [HttpPost]
+        public JsonResult SaveAccountNature(AccountNature item)
+        {
+            var newAccount = _accNatureAppService.GetID(item.ID);
+
+
+            if (newAccount == null)
+            {
+                _accNatureAppService.Insert(item);
+
+
+            }
+            else
+            {
+                AccountNature viewPar = _ctx.AccountNatures.FirstOrDefault(F => F.ID == item.ID);
+
+                viewPar.AccountNatureName = item.AccountNatureName;
+                viewPar.ID = item.ID;
+               
+                _ctx.SaveChanges();
+            }
+
+
+
+            return Json(item);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteAccountNature(int ID)
+        {
+            bool status = false;
+
+            status = _accNatureAppService.Delete(ID);
+            return Json(new { status = status });
+
+        }
+
+
         #endregion
     }
 }

@@ -96,8 +96,8 @@ namespace Hsasseeb.Web.Controllers
                 }
 
             }
-            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll().ToList(), "ID", "AccountNatureName", account.AccountNatureID);
-            ViewData["AccountParentID"] = new SelectList(_accountAppService.GetAll().ToList(), "ID", "AccountName",account.ParentAccountID);
+            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll().ToList(), "ID", "AccountNatureName", account.AccountNature);
+            ViewData["AccountParentID"] = new SelectList(_accountAppService.GetAll().ToList(), "ID", "AccountName",account.ParentAccount);
 
             return View(account);
         }
@@ -133,18 +133,18 @@ namespace Hsasseeb.Web.Controllers
             foreach (var item in geatAll)
             {
                 Account viewPar = new Account();
-                if (item.ParentAccountID == null || item.ParentAccountID ==0)
+                if (item.ParentAccount == null || item.ParentAccount ==0)
                 {
                     viewPar.AccountDesc = item.AccountDesc;
                     viewPar.ID = item.ID;
                     viewPar.AccountName = item.AccountName;
-                    viewPar.AccountNatureID = item.AccountNatureID;
+                    viewPar.AccountNature = item.AccountNature;
                     viewPar.AccountSerial = item.AccountSerial;
                     viewPar.Active = item.Active;
                     viewPar.AddDate = item.AddDate;
                     viewPar.GroupOrder = item.GroupOrder;
                     viewPar.IsMain = item.IsMain;
-                    viewPar.ParentAccountID = item.ParentAccountID;
+                    viewPar.ParentAccount = item.ParentAccount;
                     Parent.Add(viewPar);
 
                 }
@@ -165,18 +165,18 @@ namespace Hsasseeb.Web.Controllers
             foreach (var item in geatAll)
             {
                 Account viewPar = new Account();
-                if (item.ParentAccountID == pID)
+                if (item.ParentAccount == pID)
                 {
                     viewPar.AccountDesc = item.AccountDesc;
                     viewPar.ID = item.ID;
                     viewPar.AccountName = item.AccountName;
-                    viewPar.AccountNatureID = item.AccountNatureID;
+                    viewPar.AccountNature = item.AccountNature;
                     viewPar.AccountSerial = item.AccountSerial;
                     viewPar.Active = item.Active;
                     viewPar.AddDate = item.AddDate;
                     viewPar.GroupOrder = item.GroupOrder;
                     viewPar.IsMain = item.IsMain;
-                    viewPar.ParentAccountID = item.ParentAccountID;
+                    viewPar.ParentAccount = item.ParentAccount;
                     Child.Add(viewPar);
                 }
             }
@@ -228,7 +228,7 @@ namespace Hsasseeb.Web.Controllers
                 _accountAppService.Insert(account);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll().ToList(), "ID", "AccountNatureName", account.AccountNatureID);
+            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll().ToList(), "ID", "AccountNatureName", account.AccountNature);
             return View(account);
         }
 
@@ -242,7 +242,7 @@ namespace Hsasseeb.Web.Controllers
             {
                 return NotFound();
             }
-            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll().ToList(), "ID", "AccountNatureName", account.AccountNatureID);
+            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll().ToList(), "ID", "AccountNatureName", account.AccountNature);
             return View(account);
         }
 
@@ -265,7 +265,7 @@ namespace Hsasseeb.Web.Controllers
                 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll(), "ID", "AccountNatureName", account.AccountNatureID);
+            ViewData["AccountNatureID"] = new SelectList(_accNatureAppService.GetAll(), "ID", "AccountNatureName", account.AccountNature);
             return View(account);
         }
 
